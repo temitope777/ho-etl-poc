@@ -1,0 +1,20 @@
+# Dockerized PySpark ETL Pipeline with Delta Tables
+
+This project demonstrates a simple ETL (Extract, Transform, Load) pipeline using PySpark, Docker, and Delta Tables.
+
+## Requirements
+
+- Docker
+- PySpark
+- Delta Lake
+
+## How to Run
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-repo.git
+   cd your-repo
+2. docker build -t ho-etl-app . 
+2. run app with docker run -v $(pwd)/data:/app/data -v $(pwd)/output:/app/output ho-etl-app app
+3. run bdd test with docker run -v $(pwd)/data:/app/data -v $(pwd)/output:/app/output ho-etl-app test
