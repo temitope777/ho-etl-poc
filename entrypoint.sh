@@ -8,8 +8,8 @@ case "$1" in
         behave /app/features
         ;;
     app)
-        echo "Running main application..."
-        python /app/src/main.py
+        echo "Running etl application..."
+        python /app/src/etl.py
         ;;
     *)
         echo "Invalid option: $1"

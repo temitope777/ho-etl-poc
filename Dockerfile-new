@@ -1,0 +1,27 @@
+# Using a Python image with Java pre-installed or base it on a smaller footprint Python image
+FROM python:3.8-slim
+
+# Install Java
+RUN apt-get update && apt-get install -y openjdk-8-jdk && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y python3 python3-pip && rm -rf /var/lib/apt/lists/*
+# Set work directory and add user for running the application
+WORKDIR /app
+RUN useradd -m myuser
+USER myuser
+
+# Copy only the dependencies installation setup
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of your application code
+COPY src/ ./src/
+COPY features/ ./features/
+COPY data/data.csv ./data/data.csv
+COPY entrypoint.sh .
+
+# Make the entrypoint script executable
+RUN chmod +x entrypoint.sh
+
+# Entry point and default command
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["app"]
