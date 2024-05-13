@@ -1,7 +1,8 @@
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, functions as F
 import logging
 import re
 
+# Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -11,7 +12,14 @@ def sanitize_column_names(df):
     """
     def clean_column_name(column_name):
         return re.sub(r'[ ,;{}()\n\t=]', '_', column_name)
+    
     return df.toDF(*[clean_column_name(col) for col in df.columns])
+
+def calculate_total_order_amount(df):
+    """
+    Add a new column to the DataFrame that represents the total order amount.
+    """
+    return df.withColumn("TotalOrderAmount", F.col("Quantity") * F.col("Price"))
 
 def read_data(spark, file_path):
     """
@@ -45,6 +53,9 @@ def main():
         df.show()
 
         df = sanitize_column_names(df)
+        df = calculate_total_order_amount(df)  # Calculate the total order amount
+        df.show()  # Show the DataFrame after calculating the total order amount
+
         write_data(df, output_path)
         logger.info("Data written to Delta Lake successfully.")
 
